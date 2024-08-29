@@ -48,7 +48,7 @@ async def on_message(message):
                 rolls_string += f"{sign} {abs(additional_number)}"
             
             ## Result
-            if DAMAGE[damage.lower()]:
+            if damage in DAMAGE:
                 # du brauchst kein sign check mehr, weil du additoinal_number schon abhängig davon negativ gemacht hast und du kannst einfach sign selbst in den text hinzufügen
                 send_string =  f'{person} Ergebnis: **{result}** {damage.capitalize()} Schaden [||{rolls_string}||]'
             else: # if not DAMAGE
@@ -165,8 +165,7 @@ async def on_message(message):
         await send(response + '\n'+ "Total = **" + str(ergebnis)+"**")
         
     #Fertigkeiten
-    elif skill := next((key for rollType in [SKILL, ATTRIBUTE, PROFICIENCY] for key in rollType if input.startswith(f"/{key}")), None):
-    
+    elif skill := next((key for rollType in [SKILL, ATTRIBUTE, PROFICIENCY] for key in sorted(rollType, key=len, reverse=True) if input.startswith(f"/{key}")), None):
         command = input[len(skill)+1:].strip()  # Initialisiere die Variable 'command' nach der fertigkeit
         match = re.match(r'^\s?([+\-])?\s?(\d+)?$', command)
         if match:
@@ -185,7 +184,7 @@ async def on_message(message):
                 sign = sign or "+"
                 extra_roll_text = f" {sign} {abs(modifier)}"
         
-            skill_name = next(rollType[skill] for rollType in (SKILL, ATTRIBUTE, PROFICIENCY) if skill in rollType)
+            skill_name = next(rollType[skill] for rollType in sorted((SKILL, ATTRIBUTE, PROFICIENCY), key=len, reverse=True) if skill in rollType)
             
             roll = random.randint(1, 20)
             result = roll + modifier 
@@ -204,7 +203,7 @@ async def on_message(message):
             await send(f'{person}, gib bitte einen gültigen Befehl ein, wie z.B. **/Charisma +5**.')
 
     #Waffen
-    elif weapon := next((key for key in WEAPON if input.startswith(f"/{key}")), None):
+    elif weapon := next((key for key in sorted(WEAPON, key=len, reverse=True) if input.startswith(f"/{key}")), None):
         command = input[len(weapon)+1:].strip()  # Initialisiere die Variable 'command'
         match = re.match(r'^\s?([+\-])?\s?(\d+)?$', command)
         if match:
@@ -223,7 +222,7 @@ async def on_message(message):
                 sign = sign or "+"
                 extra_roll_text = f" {sign} {abs(modifier)}"
         
-            weapon_name = WEAPON(weapon)
+            weapon_name = WEAPON[weapon]
 
             roll = random.randint(1, 20)
             result = roll + modifier 

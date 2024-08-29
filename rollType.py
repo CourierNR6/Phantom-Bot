@@ -9,6 +9,7 @@ SKILL = {
     "kon": "Constitution",
     "con": "Constitution",
     "konstitution": "Constitution",
+    "constitution": "Constitution",
     "konsti": "Constitution",
     "int": "Intelligenz",
     "intelligence": "Intelligenz",
