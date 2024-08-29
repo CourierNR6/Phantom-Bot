@@ -27,10 +27,10 @@ async def on_message(message):
 
             # Generate roll elements
             dice = int(match.group(1) or '1')
-            die_type = int(match.group(3))
-            sign = match.group(4)
-            additional_number = int(match.group(5) or '0')
-            damage = match.group(6).strip()
+            die_type = int(match.group(2))
+            sign = match.group(3)
+            additional_number = int(match.group(4) or '0')
+            damage = match.group(5).strip()
 
             # Rolling
             rolls = [random.randint(1, die_type) for _ in range(dice)]
@@ -88,7 +88,7 @@ async def on_message(message):
             # Generate Text
             ## Rolled Numbers to be hidden
             rolls_string = ", ".join(map(str, rolls))
-            extra_text, = ""
+            extra_text = ""
             extra_roll_text = ""
 
             
@@ -178,7 +178,8 @@ async def on_message(message):
 
             extra_roll_text = ""
 
-            if additional_number!=0:
+            if modifier!=0:
+                sign = sign or "+"
                 extra_roll_text = f" {sign} {abs(modifier)}"
         
             skill_name = next(rollType[skill] for rollType in (SKILL, ATTRIBUTE, PROFICIENCY) if skill in rollType)
@@ -215,7 +216,7 @@ async def on_message(message):
 
             extra_roll_text = ""
 
-            if additional_number!=0:
+            if modifier!=0:
                 extra_roll_text = f" {sign} {abs(modifier)}"
         
             weapon_name = WEAPON(weapon)
