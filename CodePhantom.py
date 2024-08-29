@@ -21,7 +21,7 @@ async def on_message(message):
     # Roll Command
     if input.startswith('/roll'):
         command = re.sub(r'^/roll\s?', '', input).strip()
-        match = re.match(r'^(\d+)?\s?\s?d\s?(\d+)\s?([+\-])?\s?(\d+)?\s?(.*)$', command)
+        match = re.match(r'^(\d+)?d\s?(\d+)\s?([+\-])?\s?(\d+)?\s?(.*)$', command)
 
         if match: #roll 1d20+12 fire
 
@@ -44,6 +44,7 @@ async def on_message(message):
             
             ## Add additional number if existing
             if additional_number!=0:
+                sign = sign or "+"
                 rolls_string += f"{sign} {abs(additional_number)}"
             
             ## Result
@@ -94,6 +95,7 @@ async def on_message(message):
             
             ## Add additional number if existing
             if additional_number!=0:
+                sign = sign or "+"
                 rolls_string += f"{sign} {abs(additional_number)}"
                 extra_roll_text = f" {sign} {abs(additional_number)}"
 
@@ -131,6 +133,7 @@ async def on_message(message):
             extra_roll_text = ""
 
             if additional_number!=0:
+                sign = sign or "+"
                 rolls_string += f"{sign} {abs(additional_number)}"
                 extra_roll_text = f" {sign} {abs(additional_number)}"
 
@@ -217,6 +220,7 @@ async def on_message(message):
             extra_roll_text = ""
 
             if modifier!=0:
+                sign = sign or "+"
                 extra_roll_text = f" {sign} {abs(modifier)}"
         
             weapon_name = WEAPON(weapon)
