@@ -1,6 +1,6 @@
 import discord
 from discord import app_commands
-import commandsHandler
+import handlers.commandsHandler as commandsHandler
 
 def rollCommand(bot):
     @bot.tree.command(name="roll",description="Roll dice")

@@ -4,10 +4,7 @@ import os
 import discord
 from discord.ext import commands
 
-import slashCommands
-import rollType, weaponType
-import chaosRolls
-import easterEggs
+from botCommands import slashCommands, promptCommands
 
 load_dotenv()
 token = os.environ["TOKEN"]
@@ -22,12 +19,12 @@ slashCommands.rollCommand(bot)
 slashCommands.vorteilCommand(bot)
 slashCommands.nachteilCommand(bot)
 slashCommands.attributeCommand(bot)
-rollType.addSkillRolls(bot)
-rollType.addAttributeRolls(bot)
-rollType.addProficiencyRolls(bot)
-weaponType.addWeaponRolls(bot)
-chaosRolls.chaos(bot)
-easterEggs.hideEasterEggs(bot)
+promptCommands.addSkillRolls(bot)
+promptCommands.addAttributeRolls(bot)
+promptCommands.addProficiencyRolls(bot)
+promptCommands.addWeaponRolls(bot)
+promptCommands.chaos(bot)
+promptCommands.hideEasterEggs(bot)
 
 
 bot.run(token)  
