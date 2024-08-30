@@ -2,7 +2,7 @@
 import random
 import re
 
-import damageType, weaponType
+import damageType
 
 
 def roll(user, roll_text, modifier_input, damage_input):

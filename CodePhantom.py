@@ -1,12 +1,13 @@
 from dotenv import load_dotenv
 import os
+
 import discord
 from discord.ext import commands
-from discord import app_commands
-import commandsHandler
+
+import slashCommands
+import rollType, weaponType
+import chaosRolls
 import easterEggs
-import weaponType
-import rollType
 
 load_dotenv()
 token = os.environ["TOKEN"]
@@ -17,29 +18,17 @@ bot = commands.Bot(command_prefix="/",intents=discord.Intents.all())
 async def on_ready():
     await bot.tree.sync()
 
-easterEggs.hideEasterEggs(bot)
-weaponType.addWeaponRolls(bot)
+slashCommands.rollCommand(bot)
+slashCommands.vorteilCommand(bot)
+slashCommands.nachteilCommand(bot)
+slashCommands.attributeCommand(bot)
 rollType.addSkillRolls(bot)
 rollType.addAttributeRolls(bot)
 rollType.addProficiencyRolls(bot)
+weaponType.addWeaponRolls(bot)
+chaosRolls.chaos(bot)
+easterEggs.hideEasterEggs(bot)
 
-@bot.tree.command(name="roll",description="Roll dice")
-@app_commands.rename(roll_text="roll")
-@app_commands.describe(roll_text='ex: 1d20+12 fire', modifier='overwrites mod in text', damage='overwrites dmg in text')
-async def roll(interaction:discord.Interaction, roll_text: str, modifier: int=0, damage: str=""):
-    await interaction.response.send_message(commandsHandler.roll(interaction.user, roll_text, modifier, damage))
-
-@bot.tree.command(name="vorteil",description="Roll with advantage")
-async def vorteil(interaction:discord.Interaction, modifier: int=0):
-    await interaction.response.send_message(commandsHandler.vorteil(interaction.user, modifier))
-
-@bot.tree.command(name="nachteil",description="Roll with disadvantage")
-async def nachteil(interaction:discord.Interaction, modifier: int=0):
-    await interaction.response.send_message(commandsHandler.nachteil(interaction.user, modifier))
-
-@bot.tree.command(name="attribute",description="Roll for your attributes")
-async def attribute(interaction:discord.Interaction):
-    await interaction.response.send_message(commandsHandler.attribute())
 
 bot.run(token)  
 
