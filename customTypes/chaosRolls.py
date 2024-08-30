@@ -1,5 +1,3 @@
-import random
-
 CHAOS = {
     1: "Your shoes are now filled with jelly. Deal with it.",
     2: "You suddenly forget how to blink for the next minute.",
@@ -102,13 +100,3 @@ CHAOS = {
     99: "Your hair becomes incredibly static and sticks out everywhere.",
     100: "You can taste colors and see sounds."
 }
-
-def chaos(bot):
-    @bot.command()
-    async def chaos(ctx):
-        result = random.randint(1, 100)
-        answer = CHAOS[result]
-        user = ctx.author
-        mention = user.mention
-        send_text = f'||{result}|| {mention}, you disturbed the order of the weaves of magic:\n> {answer}'
-        await ctx.send(send_text)

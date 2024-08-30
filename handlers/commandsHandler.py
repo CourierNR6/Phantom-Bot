@@ -2,8 +2,7 @@
 import random
 import re
 
-import damageType
-
+from customTypes import damageType
 
 def roll(user, roll_text, modifier_input, damage_input):
 

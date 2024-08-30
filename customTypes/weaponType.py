@@ -1,6 +1,3 @@
-import commandsHandler
-
-
 WEAPON = {
     'unarmed': "Unarmed Strike",
     'waffenlos': "Unarmed Strike",
@@ -77,11 +74,3 @@ WEAPON = {
     'netz': "Net",
     'katana': "Katana",
 }
-
-def addWeaponRolls(bot):
-    for weapon_input, weapon_name in WEAPON.items():
-        @bot.command(name=weapon_input)
-        async def weapon(ctx, *args, weapon_name=weapon_name):
-            extra = " ".join(args)
-            user = ctx.author
-            await ctx.send(commandsHandler.weaponRoll(weapon_name, extra, user))
