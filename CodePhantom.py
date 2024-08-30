@@ -1,12 +1,10 @@
 from dotenv import load_dotenv
 import os
 import discord
-import random
-import re
 from discord.ext import commands
 from discord import app_commands
 import commandsHandler
-
+import easterEggs
 import weaponType
 import rollType
 
@@ -19,7 +17,7 @@ bot = commands.Bot(command_prefix="/",intents=discord.Intents.all())
 async def on_ready():
     await bot.tree.sync()
 
-
+easterEggs.hideEasterEggs(bot)
 weaponType.addWeaponRolls(bot)
 rollType.addSkillRolls(bot)
 rollType.addAttributeRolls(bot)
