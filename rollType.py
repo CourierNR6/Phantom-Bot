@@ -1,4 +1,6 @@
-SKILL = {
+import commandsHandler
+
+ATTRIBUTE = {
     "str": "Strength",
     "stärke": "Strength",
     "strength": "Strength",
@@ -22,7 +24,7 @@ SKILL = {
     "cha": "Charisma",
 }
 
-ATTRIBUTE = {
+SKILL = {
     "initiative": "Initiative",
     "ini": "Initiative",
     "init": "Initiative",
@@ -84,3 +86,30 @@ PROFICIENCY = {
     "heilkräuter": "Herbalismkit",
     "herbalism": "Herbalismkit",
 }
+
+
+def addSkillRolls(bot):
+    for input, skill_name in SKILL.items():
+        @bot.command(name=input, skill_name=skill_name)
+        async def skill(ctx, *args):
+            extra = " ".join(args)
+            user = ctx.author
+            await ctx.send(commandsHandler.skillRoll(skill_name, extra, user))
+
+
+def addAttributeRolls(bot):
+    for input, attribute_name in ATTRIBUTE.items():
+        @bot.command(name=input)
+        async def attribute(ctx, *args, attribute_name=attribute_name):
+            extra = " ".join(args)
+            user = ctx.author
+            await ctx.send(commandsHandler.skillRoll(attribute_name, extra, user))
+
+
+def addProficiencyRolls(bot):
+    for input, proficiency_name in PROFICIENCY.items():
+        @bot.command(name=input)
+        async def proficiency(ctx, *args, proficiency_name=proficiency_name):
+            extra = " ".join(args)
+            user = ctx.author
+            await ctx.send(commandsHandler.skillRoll(proficiency_name, extra, user))
