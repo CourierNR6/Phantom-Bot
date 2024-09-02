@@ -191,3 +191,19 @@ def skillRoll(skill, extra, user):
     send_text = f'{show_text}{show_rolled}'
 
     return send_text
+
+def create_dynamic_dic_command(key, value):
+    async def dyn_cmd(ctx):
+        user = ctx.author
+        mention = user.mention
+
+        # Check if egg_message is callable (like the test function)
+        if callable(value):
+            value_result = value()  # Execute the function to get the result
+        else:
+            value_result = value  # Use as is if not callable
+
+        send_text = f'{mention} {value_result}'
+        await ctx.send(send_text)
+
+    return dyn_cmd

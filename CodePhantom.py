@@ -24,7 +24,7 @@ promptCommands.addAttributeRolls(bot)
 promptCommands.addProficiencyRolls(bot)
 promptCommands.addWeaponRolls(bot)
 promptCommands.chaos(bot)
-promptCommands.hideEasterEggs(bot)
+promptCommands.hideEasterEggs(bot, commands)
 
 
 bot.run(token)  

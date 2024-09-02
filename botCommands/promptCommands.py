@@ -40,16 +40,11 @@ def addProficiencyRolls(bot):
             user = ctx.author
             await ctx.send(commandsHandler.skillRoll(proficiency_name, extra, user))
 
-
-
-def hideEasterEggs(bot):
+def hideEasterEggs(bot, commands):
     for egg_name, egg_message in EASTEREGG.items():
-        @bot.command(name=egg_name)
-        async def egg(ctx, egg_message = egg_message):
-            user = ctx.author
-            mention = user.mention
-            send_text = f'{mention} {egg_message}'
-            await ctx.send(send_text)
+        # Create a command handler for each egg_name
+        command = commandsHandler.create_dynamic_dic_command(egg_name, egg_message)
+        bot.add_command(commands.Command(command, name=egg_name))
 
 
 def chaos(bot):
