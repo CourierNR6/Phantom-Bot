@@ -1,0 +1,5 @@
+python-dotenv==1.0.1
+discord
+discord.py==2.4.0
+psycopg2==2.9.10
+aiohttp

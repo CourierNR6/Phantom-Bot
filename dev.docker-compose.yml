@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  raspberry-pi-sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: raspberry-pi-sim
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - .:/bot:cached 
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    command: 
+      sh -c "apt-get update && apt-get install postgresql-client -y && sleep infinity"
