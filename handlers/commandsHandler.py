@@ -279,3 +279,48 @@ async def setStats(interaction, user_id, name):
 
     await show_character_sheet(interaction, name, character[0]["id"], attributes[0]["id"], saves[0]["id"], skills[0]["id"])
     return
+
+async def showStats(interaction:discord.Interaction, user_id:int, name:str):
+    if name:
+        character = await get_element_where('characters', '*', 'name', name)
+    else:
+        character = await get_element_where('characters', '*', 'user_id', user_id)
+        name = character[0]["name"]
+    if character:
+        logger.info(f"Character with name {name} exists")
+        # Fetch related attributes
+        attributes = await get_element_where('attributes', '*', 'character_id', character[0]["id"])
+        saves = await get_element_where('save_mods', '*', 'character_id', character[0]["id"])
+        skills = await get_element_where('skill_mods', '*', 'character_id', character[0]["id"])
+
+        if not (attributes and saves and skills):
+            logger.error("Failed to fetch related entries for character.")
+            await interaction.response.send_message("Error fetching character details.", ephemeral=True)
+            return
+
+        reference_ids = [character[0]["id"], attributes[0]["id"], saves[0]["id"], skills[0]["id"]]
+
+        prefilled_values = await update_prefilled_values(reference_ids, interaction)
+        attributes, save_mods, passives, skill_mods_a_i, skill_mods_m_s = split_tables_to_fields(prefilled_values)
+        embed = create_embed(name, attributes, save_mods, passives, skill_mods_a_i, skill_mods_m_s)
+        if embed:
+            await interaction.response.send_message(
+                embeds=[embed]
+            )
+        else:
+            await interaction.response.send_message("Error creating the embed", ephemeral=True)
+
+    else:
+        logger.info("Character with does not exist")
+        error = ""
+        if name:
+            error = "Character with the name {name} does not exist"
+        else:
+            if user_id == interaction.user.id:
+                error = "There is no character assigned to you.\nCreate one with `/setStats <name> to assign one to yourself`"
+            else:
+                user = await interaction.guild.fetch_member(user_id)
+                error = f"There is no character assigned to {user.display_name}.\nCreate one with `/setStats <name> <user> to assign one to them`"
+
+        await interaction.response.send_message(error, ephemeral=True)
+        return

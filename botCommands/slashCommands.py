@@ -1,6 +1,7 @@
 import discord
 from discord import app_commands
 import handlers.commandsHandler as commandsHandler
+import typing
 
 def rollCommand(bot):
     @bot.tree.command(name="roll",description="Roll dice")
@@ -29,3 +30,9 @@ def setStats(bot):
     async def setStats(interaction:discord.Interaction, name: str, member: discord.Member | None):
         user_id = member.id if member else interaction.user.id
         await commandsHandler.setStats(interaction, user_id, name)
+
+def showStats(bot):
+    @bot.tree.command(name="showstats",description="show stats of characters or someone elses character")
+    async def showStats(interaction:discord.Interaction, name: str | None, member: discord.Member | None):
+        user_id = member.id if member else interaction.user.id
+        await commandsHandler.showStats(interaction, user_id, name)
