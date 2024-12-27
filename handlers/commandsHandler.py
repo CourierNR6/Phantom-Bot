@@ -1,8 +1,16 @@
 
 import random
-import re
+import re, logging
 
+import discord
+from database.db import get_element_where, get_element_by_id, create_element, update_element
 from customTypes import damageType
+from characterStats.characterSheet import create_embed, show_character_sheet, split_tables_to_fields
+from characterStats.databaseHandlers import update_prefilled_values
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def roll(user, roll_text, modifier_input, damage_input):
 
@@ -207,3 +215,67 @@ def create_dynamic_dic_command(key, value):
         await ctx.send(send_text)
 
     return dyn_cmd
+
+async def setStats(interaction, user_id, name):
+
+    character = None
+    attributes = None
+    saves = None
+    skills = None
+    character = await get_element_where('characters', '*', 'name', name)
+    if character:
+        logger.info(f"Character with name {name} exists")
+        # Fetch related attributes
+        attributes = await get_element_where('attributes', '*', 'character_id', character[0]["id"])
+        saves = await get_element_where('save_mods', '*', 'character_id', character[0]["id"])
+        skills = await get_element_where('skill_mods', '*', 'character_id', character[0]["id"])
+
+        # Ensure all related entries were created successfully
+        if not (attributes and saves and skills):
+            logger.error("Failed to fetch related entries for character.")
+            await interaction.response.send_message("Error fetching character details.", ephemeral=True)
+            return
+    else:
+        logger.info(f"Character with name {name} is being created")
+        # Create the main character entry
+        character = await create_element('characters',
+            ['name', 'user_id'],
+            [name, user_id]
+        )
+        if not character:
+            logger.error("Failed to create character.")
+            await interaction.response.send_message("Error creating character.", ephemeral=True)
+            return
+
+        # Create related entries in attributes, saves, and skills tables
+        attributes = await create_element('attributes',
+            ['character_name', 'character_id'],
+            [name, character[0]["id"]]
+        )
+        saves = await create_element('save_mods',
+            ['character_name', 'character_id'],
+            [name, character[0]["id"]]
+        )
+        skills = await create_element('skill_mods',
+            ['character_name', 'character_id'],
+            [name, character[0]["id"]]
+        )
+
+        # Ensure all related entries were created successfully
+        if not (attributes and saves and skills):
+            logger.error("Failed to create related entries for character.")
+            await interaction.response.send_message("Error creating character details.", ephemeral=True)
+            return
+
+        # Link related IDs back to the character
+        updated = await update_element('characters', character[0]["id"],
+            ['attributes_id', 'save_mods_id', 'skill_mods_id'],
+            [attributes[0]["id"], saves[0]["id"], skills[0]["id"]]
+        )
+        if not updated:
+            logger.error("Failed to update character with related IDs.")
+            await interaction.response.send_message("Error finalizing character creation.", ephemeral=True)
+            return
+
+    await show_character_sheet(interaction, name, character[0]["id"], attributes[0]["id"], saves[0]["id"], skills[0]["id"])
+    return

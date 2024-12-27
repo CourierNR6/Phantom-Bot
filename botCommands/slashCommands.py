@@ -23,3 +23,9 @@ def attributeCommand(bot):
     @bot.tree.command(name="attribute",description="Roll for your attributes")
     async def attribute(interaction:discord.Interaction):
         await interaction.response.send_message(commandsHandler.attribute())
+
+def setStats(bot):
+    @bot.tree.command(name="setstats",description="set stats of character. Tag someone to assign the char to them")
+    async def setStats(interaction:discord.Interaction, name: str, member: discord.Member | None):
+        user_id = member.id if member else interaction.user.id
+        await commandsHandler.setStats(interaction, user_id, name)
